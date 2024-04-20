@@ -12,8 +12,10 @@
 
 
 <div style="padding-bottom: 15px;" class="container">
-    <div style="text-align: center;"><h1>Encuentre todo el cobre para ganar el juego</h1></h2></div>
-    <form method="post" th:action="@{/jugar/guardarcoordenada}">
+    <div style="text-align: center;"><h1 th:if="!${ganar} and !${perder}">Encuentre todo el cobre para ganar el juego</h1></div>
+    <div style="text-align: center;"><h1 th:if="${ganar} or ${perder}">--------------------------------------</h1></div>
+
+    <form method="post" th:action="@{/jugar/guardarcoordenada}" th:if="!${ganar} and !${perder}">
 
         <div class="mb-3">
             <label for="coordenada">Coordenada para explotar la mina</label>
@@ -22,16 +24,42 @@
         <button type="submit" class="btn btn-primary">Explotar</button>
     </form>
 
-    <div class="container">
 
-        <div class="container bg-primary col-1" th:each = "fila : ${listaFilas}">
-            <h4>0</h4>
-            <div class="container bg-primary col- 1 row-1" th:each = "col : ${listaColumnas}">
-                <h4>0</h4>
+
+    <div class="container flex-direction: row d-flex justify-content-around">
+
+        <div class="container d-flex justify-content-around m-1 col-6"  th:each="i:${#numbers.sequence(0,parametros.filas - 1)}">
+            <div th:each="j:${#numbers.sequence(0,parametros.columnas - 1)}" class="">
+
+                <th:block th:switch="${tablero[i][j].getEstadoCasilla()}">
+                    <div  th:width="100px" th:height="100px" class="bg-info p-4" th:case="1"></div>
+                    <div th:width="100px" th:height="100px" class="bg-success p-4 " th:case="2"></div>
+                    <div th:width="100px" th:height="100px" class="bg-success  p-3" th:case="3" th:text="${tablero[i][j].numBombasAlrededor}"></div>
+                    <div th:width="100px" th:height="100px" class="bg-danger  p-4" th:case="4"></div>
+
+                </th:block>
+
             </div>
         </div>
-        </div>
+
     </div>
+
+
+    <h4 th:text="'Turno:' + ${turno}" class="container col-2 border m-2 p-2"></h4>
+    <h4 th:text="'Intentos restantes:' + ${parametros.intentos}" class="container col-2 border m-2 p-2"></h4>
+
+    <div th:if="${ganar}">
+        <h4>Felicidades! Usted ha ganado.</h4>
+    </div>
+
+    <div th:if="${perder}">
+        <h4>GAME OVER</h4>
+    </div>
+
+
+
+
+
 
 
 
