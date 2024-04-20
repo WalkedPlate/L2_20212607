@@ -23,13 +23,19 @@ public class GameController {
     static int filaExplotar = 0;
     static int columnaExplotar = 0;
     static List<Coordenada> listaBombas= new ArrayList<>();
+    static int numBombasRestantes = 0;
 
     static Coordenada[][] tablero;
 
 
 
     @GetMapping(value ={"/buscaminas","","/"})
-    public String configurarBuscaminas(){
+    public String configurarBuscaminas( @RequestParam(name = "reset", required = false) Integer reset){
+
+        if(reset != null && reset == 1){
+            turno = 1;
+        }
+
         return "buscaminas";
     }
 
@@ -38,6 +44,7 @@ public class GameController {
 
 
         parametros = parametrosGuardar;
+        listaBombas.clear();
 
         System.out.println(parametros.getFilas());
         System.out.println(parametros.getColumnas());
@@ -60,6 +67,8 @@ public class GameController {
             listaBombas.add(coordenada);
         }
 
+        numBombasRestantes = listaBombas.size();
+
 
         //Inicializar tablero
         tablero =  new Coordenada[parametros.getFilas()][parametros.getColumnas()];
@@ -80,6 +89,7 @@ public class GameController {
         model.addAttribute("parametros",parametros);
         model.addAttribute("turno",turno);
         model.addAttribute("tablero",tablero);
+        model.addAttribute("bombasRestantes",numBombasRestantes);
         return "jugar";
     }
 
@@ -103,6 +113,7 @@ public class GameController {
         model.addAttribute("parametros",parametros);
         model.addAttribute("turno",turno);
         model.addAttribute("tablero",tablero);
+        model.addAttribute("bombasRestantes",numBombasRestantes);
 
         return "jugar";
     }
@@ -178,6 +189,7 @@ public class GameController {
             if(esBomba(filaExplotar,columnaExplotar)){
                 tablero[filaExplotar-1][columnaExplotar-1].setEstadoCasilla(4);
                 parametros.setIntentos(parametros.getIntentos()-1);
+                numBombasRestantes--;
             }
             else {
 
@@ -235,7 +247,7 @@ public class GameController {
             }
         }
 
-        if(count == 0 && parametros.getIntentos()>=1){
+        if(count == numBombasRestantes && parametros.getIntentos()>=1){
             win = true;
         }
 

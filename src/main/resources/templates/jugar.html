@@ -47,13 +47,16 @@
 
     <h4 th:text="'Turno:' + ${turno}" class="container col-2 border m-2 p-2"></h4>
     <h4 th:text="'Intentos restantes:' + ${parametros.intentos}" class="container col-2 border m-2 p-2"></h4>
+    <h4 th:text="'Bombas restantes:' + ${bombasRestantes}" class="container col-2 border m-2 p-2"></h4>
 
-    <div th:if="${ganar}">
-        <h4>Felicidades! Usted ha ganado.</h4>
+    <div th:if="${ganar}" class="m-2">
+        <h2>Felicidades! Usted ha ganado.</h2>
+        <a class="btn btn-primary" th:href="@{'/buscaminas?reset=1'}">Volver al inicio</a>
     </div>
 
-    <div th:if="${perder}">
-        <h4>GAME OVER</h4>
+    <div th:if="${perder}" class="m-2">
+        <h2>GAME OVER</h2>
+        <a class="btn btn-primary" th:href="@{'/buscaminas?reset=1'}">Volver al inicio</a>
     </div>
 
 
